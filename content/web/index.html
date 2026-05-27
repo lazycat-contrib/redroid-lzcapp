@@ -439,20 +439,98 @@
   <!-- ═══════════════ Hero ═══════════════ -->
   <header class="hero">
     <div class="hero-badge">
-      <span class="dot"></span> GPU Accelerated AIC
+      <span class="dot"></span> GPU 加速 Android 云方案
     </div>
     <h1>ReDroid</h1>
     <p class="subtitle">
-      Remote anDroid &mdash; boot Android instances in containers with full GPU acceleration.
-      Cloud gaming, virtual phones, and automation testing on arm64 &amp; amd64.
+      Remote anDroid &mdash; 在容器中启动 Android 实例，支持 GPU 硬件加速。
+      适用于云游戏、虚拟手机、自动化测试等场景，兼容 arm64 和 amd64 架构。
     </p>
     <div class="hero-tags">
       <span class="tag accent">ADB :5555</span>
       <span class="tag">Android 8.1 &ndash; 16</span>
       <span class="tag">arm64 &amp; amd64</span>
-      <span class="tag warn">Internal Network Only</span>
+      <span class="tag warn">仅限内网使用</span>
     </div>
   </header>
+
+  <!-- ═══════════════ Connection Card ═══════════════ -->
+  <div class="connect-card" id="connect-card">
+    <div class="connect-card-inner">
+      <div class="connect-left">
+        <div class="connect-label">ADB 连接地址</div>
+        <div class="connect-addr">
+          <span class="connect-host" id="adb-host">loading...</span><span class="connect-port">:5555</span>
+        </div>
+      </div>
+      <div class="connect-right">
+        <button class="connect-copy-btn" id="copy-adb-addr" aria-label="复制 ADB 地址">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>复制</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .connect-card {
+      background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(79,195,247,0.06) 100%);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: var(--radius-lg);
+      margin: 0 0 1.5rem;
+      overflow: hidden;
+    }
+    .connect-card-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      gap: 1rem;
+    }
+    .connect-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--foreground-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    .connect-addr {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--foreground);
+      word-break: break-all;
+    }
+    .connect-port {
+      color: var(--accent);
+    }
+    .connect-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-family: var(--font);
+      font-weight: 500;
+      color: var(--bg-deep);
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s var(--easing), transform 0.1s var(--easing);
+    }
+    .connect-copy-btn:hover { background: #16A34A; }
+    .connect-copy-btn:active { transform: scale(0.97); }
+    .connect-copy-btn.copied { background: #16A34A; }
+    .connect-copy-btn svg { width: 16px; height: 16px; }
+    @media (max-width: 640px) {
+      .connect-card-inner { flex-direction: column; align-items: stretch; text-align: center; }
+      .connect-addr { font-size: 1.1rem; }
+      .connect-copy-btn { justify-content: center; }
+    }
+  </style>
 
   <!-- ═══════════════ Security Alert ═══════════════ -->
   <div class="alert alert-danger" role="alert">
@@ -461,8 +539,8 @@
       <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
     </svg>
     <div>
-      <strong>Security Warning</strong>
-      Never expose the ADB port on a public network. Anyone with ADB access can fully control the Android instance and may compromise the host. Connect only from trusted local networks or via VPN.
+      <strong>安全警告</strong>
+      切勿将 ADB 端口暴露在公网上。任何获得 ADB 访问权限的人都可以完全控制该 Android 实例，甚至可能危及宿主机安全。请仅在可信的本地网络或 VPN 内连接。
     </div>
   </div>
 
@@ -470,28 +548,28 @@
   <section aria-labelledby="features-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
-      <h2 id="features-heading">Key <span class="hl">Features</span></h2>
+      <h2 id="features-heading">核心<span class="hl">特性</span></h2>
     </div>
     <div class="bento">
       <div class="bento-card">
         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <h4>GPU Acceleration</h4>
-        <p>Hardware-accelerated rendering via host GPU for smooth graphics and gaming performance.</p>
+        <h4>GPU 硬件加速</h4>
+        <p>通过宿主机 GPU 进行硬件加速渲染，流畅运行图形应用和游戏。</p>
       </div>
       <div class="bento-card">
         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
-        <h4>Multi-Instance</h4>
-        <p>Boot many isolated Android instances simultaneously on a single Linux host.</p>
+        <h4>多实例支持</h4>
+        <p>单台 Linux 主机上同时启动多个相互隔离的 Android 实例。</p>
       </div>
       <div class="bento-card">
         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <h4>arm64 &amp; amd64</h4>
-        <p>Native support for both CPU architectures. Works on Docker, Podman, and Kubernetes.</p>
+        <p>原生支持两种 CPU 架构，兼容 Docker、Podman、Kubernetes 等容器环境。</p>
       </div>
       <div class="bento-card">
         <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
         <h4>Android 8.1 &ndash; 16</h4>
-        <p>Wide version coverage from legacy to the latest Android release.</p>
+        <p>覆盖从经典版本到最新 Android 的广泛版本支持。</p>
       </div>
     </div>
   </section>
@@ -500,24 +578,24 @@
   <section aria-labelledby="usecases-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 10-4 4-2-2"/></svg>
-      <h2 id="usecases-heading">Use <span class="hl">Cases</span></h2>
+      <h2 id="usecases-heading">应用<span class="hl">场景</span></h2>
     </div>
     <div class="use-cases">
       <div class="use-case">
         <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21"/></svg></div>
-        <span class="uc-text">Cloud Gaming</span>
+        <span class="uc-text">云游戏</span>
       </div>
       <div class="use-case">
         <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-        <span class="uc-text">Virtual Phones</span>
+        <span class="uc-text">虚拟手机</span>
       </div>
       <div class="use-case">
         <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></div>
-        <span class="uc-text">Automation Testing</span>
+        <span class="uc-text">自动化测试</span>
       </div>
       <div class="use-case">
         <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <span class="uc-text">App Development</span>
+        <span class="uc-text">App 开发调试</span>
       </div>
     </div>
   </section>
@@ -528,46 +606,46 @@
   <section aria-labelledby="adb-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      <h2 id="adb-heading">Connect via <span class="hl">ADB</span></h2>
+      <h2 id="adb-heading">通过 <span class="hl">ADB</span> 连接</h2>
     </div>
 
     <ol class="steps">
       <li class="step">
-        <h4>Install ADB on your machine</h4>
-        <p>Download from <a href="https://developer.android.com/studio#downloads" target="_blank" rel="noopener">Android Developer Studio</a> or use your package manager.</p>
+        <h4>在本地安装 ADB</h4>
+        <p>从 <a href="https://developer.android.com/studio#downloads" target="_blank" rel="noopener">Android Developer Studio</a> 下载，或使用包管理器安装。</p>
         <div class="code-wrapper">
-          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="复制到剪贴板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button></div>
           <pre><code># Debian / Ubuntu
 sudo apt install adb
 
 # macOS
 brew install android-platform-tools
 
-# Windows &mdash; download SDK Platform Tools from:
+# Windows — 从以下地址下载 SDK Platform Tools：
 # https://developer.android.com/studio#downloads</code></pre>
         </div>
       </li>
       <li class="step">
-        <h4>Find the connection address</h4>
-        <p>In the LazyCat app detail page, locate the <strong>TCP ingress</strong> host and port for port 5555.</p>
+        <h4>获取连接地址</h4>
+        <p>连接地址为当前页面的域名 + ADB 端口 <strong>5555</strong>（已在页面顶部显示）。</p>
       </li>
       <li class="step">
-        <h4>Connect</h4>
+        <h4>执行连接命令</h4>
         <div class="code-wrapper">
-          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-          <pre><code>adb connect &lt;host&gt;:&lt;port&gt;
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="复制到剪贴板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button></div>
+          <pre><code class="adb-cmd">adb connect <span class="adb-host-placeholder">HOST</span>:5555
 
-# Verify connection
+# 验证连接状态
 adb devices
-# Expected output:
-# &lt;host&gt;:&lt;port&gt;    device</code></pre>
+# 正常输出：
+# <span class="adb-host-placeholder">HOST</span>:5555    device</code></pre>
         </div>
       </li>
     </ol>
 
     <div class="info-box tip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <div>If the connection fails, verify the ADB port is reachable from your network. Check firewall rules and ensure you are on the same local network or VPN.</div>
+      <div>如果连接失败，请确认 ADB 端口在网络上可达。检查防火墙规则，确保你和设备处于同一局域网或 VPN 中。</div>
     </div>
   </section>
 
@@ -575,14 +653,14 @@ adb devices
   <section aria-labelledby="scrcpy-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <h2 id="scrcpy-heading">Screen Mirroring with <span class="hl">scrcpy</span></h2>
+      <h2 id="scrcpy-heading">使用 <span class="hl">scrcpy</span> 投屏控制</h2>
     </div>
 
     <ol class="steps">
       <li class="step">
-        <h4>Install scrcpy</h4>
+        <h4>安装 scrcpy</h4>
         <div class="code-wrapper">
-          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="复制到剪贴板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button></div>
           <pre><code># Debian / Ubuntu
 sudo apt install scrcpy
 
@@ -590,28 +668,28 @@ sudo apt install scrcpy
 brew install scrcpy
 
 # Windows
-# Download from https://github.com/Genymobile/scrcpy/releases</code></pre>
+# 从 https://github.com/Genymobile/scrcpy/releases 下载安装</code></pre>
         </div>
       </li>
       <li class="step">
-        <h4>Launch scrcpy</h4>
+        <h4>启动 scrcpy</h4>
         <div class="code-wrapper">
-          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
-          <pre><code>scrcpy -s &lt;host&gt;:&lt;port&gt;
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="复制到剪贴板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button></div>
+          <pre><code class="scrcpy-cmd">scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555
 
-# Useful options:
-scrcpy -s &lt;host&gt;:&lt;port&gt; --max-size 1024     # Limit resolution
-scrcpy -s &lt;host&gt;:&lt;port&gt; --bit-rate 2M        # Limit bitrate
-scrcpy -s &lt;host&gt;:&lt;port&gt; --no-audio            # Disable audio forwarding
-scrcpy -s &lt;host&gt;:&lt;port&gt; --stay-awake          # Keep screen on
-scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encoding</code></pre>
+# 常用选项：
+scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555 --max-size 1024     # 限制分辨率
+scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555 --bit-rate 2M        # 限制码率
+scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555 --no-audio            # 不转发音频
+scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555 --stay-awake          # 保持屏幕常亮
+scrcpy -s <span class="adb-host-placeholder">HOST</span>:5555 --video-codec h265    # H.265 硬件编码</code></pre>
         </div>
       </li>
     </ol>
 
     <div class="info-box info">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-      <div>For smoother performance on slower networks, use <code>--max-size 1024 --bit-rate 2M</code> to reduce bandwidth. scrcpy defaults to H.264; use <code>--video-codec h265</code> for better quality at lower bitrates.</div>
+      <div>网络较慢时建议使用 <code>--max-size 1024 --bit-rate 2M</code> 降低带宽占用。scrcpy 默认使用 H.264 编码，使用 <code>--video-codec h265</code> 可在更低码率下获得更好画质。</div>
     </div>
   </section>
 
@@ -621,27 +699,27 @@ scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encod
   <section aria-labelledby="ref-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      <h2 id="ref-heading">ADB <span class="hl">Quick Reference</span></h2>
+      <h2 id="ref-heading">ADB <span class="hl">命令速查</span></h2>
     </div>
 
     <div class="table-wrap">
-      <table aria-label="ADB commands reference">
+      <table aria-label="ADB 命令速查表">
         <thead>
-          <tr><th>Command</th><th>Description</th></tr>
+          <tr><th>命令</th><th>说明</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>adb devices</code></td><td>List connected devices</td></tr>
-          <tr><td><code>adb shell</code></td><td>Open an interactive shell on the device</td></tr>
-          <tr><td><code>adb install app.apk</code></td><td>Install an APK</td></tr>
-          <tr><td><code>adb uninstall &lt;pkg&gt;</code></td><td>Uninstall an app by package name</td></tr>
-          <tr><td><code>adb push local /sdcard/</code></td><td>Copy a file to the device</td></tr>
-          <tr><td><code>adb pull /sdcard/f local</code></td><td>Copy a file from the device</td></tr>
-          <tr><td><code>adb reboot</code></td><td>Reboot the Android instance</td></tr>
-          <tr><td><code>adb logcat</code></td><td>View real-time system logs</td></tr>
-          <tr><td><code>adb shell wm size</code></td><td>Get screen resolution</td></tr>
-          <tr><td><code>adb shell wm density</code></td><td>Get screen DPI</td></tr>
-          <tr><td><code>adb disconnect &lt;addr&gt;</code></td><td>Disconnect from a device</td></tr>
-          <tr><td><code>adb kill-server</code></td><td>Restart the ADB server</td></tr>
+          <tr><td><code>adb devices</code></td><td>列出已连接设备</td></tr>
+          <tr><td><code>adb shell</code></td><td>打开设备交互式 Shell</td></tr>
+          <tr><td><code>adb install app.apk</code></td><td>安装 APK 文件</td></tr>
+          <tr><td><code>adb uninstall &lt;包名&gt;</code></td><td>按包名卸载应用</td></tr>
+          <tr><td><code>adb push local /sdcard/</code></td><td>推送文件到设备</td></tr>
+          <tr><td><code>adb pull /sdcard/f local</code></td><td>从设备拉取文件</td></tr>
+          <tr><td><code>adb reboot</code></td><td>重启 Android 实例</td></tr>
+          <tr><td><code>adb logcat</code></td><td>查看实时系统日志</td></tr>
+          <tr><td><code>adb shell wm size</code></td><td>获取屏幕分辨率</td></tr>
+          <tr><td><code>adb shell wm density</code></td><td>获取屏幕 DPI</td></tr>
+          <tr><td><code>adb disconnect &lt;地址&gt;</code></td><td>断开设备连接</td></tr>
+          <tr><td><code>adb kill-server</code></td><td>重启 ADB 服务</td></tr>
         </tbody>
       </table>
     </div>
@@ -651,25 +729,25 @@ scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encod
   <section aria-labelledby="versions-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <h2 id="versions-heading">Available <span class="hl">Versions</span></h2>
+      <h2 id="versions-heading">可选<span class="hl">版本</span></h2>
     </div>
 
     <div class="table-wrap">
-      <table aria-label="Available Android versions">
+      <table aria-label="可选 Android 版本列表">
         <thead>
-          <tr><th>Image Tag</th><th>Android</th><th>Arch</th></tr>
+          <tr><th>镜像标签</th><th>Android</th><th>架构</th></tr>
         </thead>
         <tbody>
           <tr><td><code>redroid/redroid:16.0.0-latest</code></td><td>16</td><td>32+64</td></tr>
-          <tr><td><code>redroid/redroid:16.0.0_64only-latest</code></td><td>16</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:16.0.0_64only-latest</code></td><td>16</td><td>仅 64 位</td></tr>
           <tr><td><code>redroid/redroid:15.0.0-latest</code></td><td>15</td><td>32+64</td></tr>
-          <tr><td><code>redroid/redroid:15.0.0_64only-latest</code></td><td>15</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:15.0.0_64only-latest</code></td><td>15</td><td>仅 64 位</td></tr>
           <tr><td><code>redroid/redroid:14.0.0-latest</code></td><td>14</td><td>32+64</td></tr>
-          <tr><td><code>redroid/redroid:14.0.0_64only-latest</code></td><td>14</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:14.0.0_64only-latest</code></td><td>14</td><td>仅 64 位</td></tr>
           <tr><td><code>redroid/redroid:13.0.0-latest</code></td><td>13</td><td>32+64</td></tr>
-          <tr><td><code>redroid/redroid:13.0.0_64only-latest</code></td><td>13</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:13.0.0_64only-latest</code></td><td>13</td><td>仅 64 位</td></tr>
           <tr><td><code>redroid/redroid:12.0.0-latest</code></td><td>12</td><td>32+64</td></tr>
-          <tr><td><code>redroid/redroid:12.0.0_64only-latest</code></td><td>12</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:12.0.0_64only-latest</code></td><td>12</td><td>仅 64 位</td></tr>
           <tr><td><code>redroid/redroid:11.0.0-latest</code></td><td>11</td><td>32+64</td></tr>
           <tr><td><code>redroid/redroid:10.0.0-latest</code></td><td>10</td><td>32+64</td></tr>
           <tr><td><code>redroid/redroid:9.0.0-latest</code></td><td>9</td><td>32+64</td></tr>
@@ -678,7 +756,7 @@ scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encod
       </table>
     </div>
 
-    <p style="color:var(--foreground-dim);font-size:0.84rem;margin-top:0.75rem;">To switch versions, update the <strong>Android Image</strong> parameter in app settings and redeploy.</p>
+    <p style="color:var(--foreground-dim);font-size:0.84rem;margin-top:0.75rem;">如需切换版本，请在应用设置中修改 <strong>Android 镜像</strong> 参数后重新部署。</p>
   </section>
 
   <div class="divider"></div>
@@ -687,34 +765,34 @@ scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encod
   <section aria-labelledby="trouble-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <h2 id="trouble-heading">Troubleshooting</h2>
+      <h2 id="trouble-heading">常见<span class="hl">问题</span></h2>
     </div>
 
     <div class="trouble-list">
       <div class="trouble-card">
-        <h4>ADB connection refused</h4>
+        <h4>ADB 连接被拒绝</h4>
         <ul>
-          <li>Verify the redroid container is running</li>
-          <li>Confirm the host address and port are correct</li>
-          <li>Check that no firewall is blocking the TCP ingress port</li>
-          <li>Try <code>adb kill-server</code> then reconnect</li>
+          <li>确认 redroid 容器正在运行中</li>
+          <li>检查连接地址和端口是否正确</li>
+          <li>确认防火墙没有拦截 TCP ingress 端口</li>
+          <li>尝试 <code>adb kill-server</code> 后重新连接</li>
         </ul>
       </div>
       <div class="trouble-card">
-        <h4>scrcpy shows a black screen</h4>
+        <h4>scrcpy 显示黑屏</h4>
         <ul>
-          <li>Wait 1&ndash;2 minutes for the Android system to fully boot</li>
-          <li>Try <code>adb reconnect</code> to refresh the connection</li>
-          <li>Verify the container has sufficient memory allocated</li>
+          <li>等待 1&ndash;2 分钟让 Android 系统完全启动</li>
+          <li>尝试 <code>adb reconnect</code> 刷新连接</li>
+          <li>确认容器分配了足够的内存</li>
         </ul>
       </div>
       <div class="trouble-card">
-        <h4>Container fails to start</h4>
+        <h4>容器无法启动</h4>
         <ul>
-          <li>Host must have <code>binder_linux</code> and <code>ashmem_linux</code> kernel modules loaded</li>
-          <li>Verify: <code>lsmod | grep -E "binder|ashmem"</code></li>
-          <li>Host must support privileged containers</li>
-          <li>Check container logs for detailed error messages</li>
+          <li>宿主机必须加载 <code>binder_linux</code> 和 <code>ashmem_linux</code> 内核模块</li>
+          <li>验证命令：<code>lsmod | grep -E "binder|ashmem"</code></li>
+          <li>宿主机必须支持特权容器</li>
+          <li>查看容器日志获取详细错误信息</li>
         </ul>
       </div>
     </div>
@@ -724,16 +802,16 @@ scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encod
   <section aria-labelledby="host-heading">
     <div class="section-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-      <h2 id="host-heading">Host <span class="hl">Requirements</span></h2>
+      <h2 id="host-heading">宿主机<span class="hl">要求</span></h2>
     </div>
 
     <div class="info-box warn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <div>
-        <strong>Kernel Module Note</strong>
-        The LazyCat host must have the required kernel modules. If the container fails to start, the host administrator may need to run:
+        <strong>内核模块说明</strong>
+        LazyCat 宿主机需要加载必需的内核模块。如果容器启动失败，管理员可能需要在宿主机上执行以下命令：
         <div class="code-wrapper" style="margin-top:0.5rem;">
-          <div class="code-header"><span class="lang">Shell (host)</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <div class="code-header"><span class="lang">Shell（宿主机）</span><button class="copy-btn" aria-label="复制到剪贴板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制</button></div>
           <pre><code>apt install linux-modules-extra-$(uname -r)
 modprobe binder_linux devices="binder,hwbinder,vndbinder"
 modprobe ashmem_linux</code></pre>
@@ -745,9 +823,9 @@ modprobe ashmem_linux</code></pre>
   <!-- ═══════════════ Footer ═══════════════ -->
   <footer>
     <p>
-      <a href="https://github.com/remote-android/redroid" target="_blank" rel="noopener">ReDroid on GitHub</a>
+      <a href="https://github.com/remote-android/redroid" target="_blank" rel="noopener">ReDroid GitHub</a>
       &nbsp;&middot;&nbsp;
-      <a href="https://developer.lazycat.cloud" target="_blank" rel="noopener">LazyCat Developer Docs</a>
+      <a href="https://developer.lazycat.cloud" target="_blank" rel="noopener">LazyCat 开发者文档</a>
     </p>
     <p style="margin-top:0.4rem;">Powered by LazyCat Cloud</p>
   </footer>
@@ -755,19 +833,65 @@ modprobe ashmem_linux</code></pre>
 </div>
 
 <script>
-document.querySelectorAll('.copy-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const wrapper = btn.closest('.code-wrapper');
-    const code = wrapper.querySelector('code');
-    navigator.clipboard.writeText(code.textContent).then(() => {
+// ── Populate dynamic ADB host ──────────────────
+(function() {
+  var host = window.location.hostname;
+  var adbAddr = host + ':5555';
+
+  // Fill connection card
+  var hostEl = document.getElementById('adb-host');
+  if (hostEl) hostEl.textContent = host;
+
+  // Fill all placeholder spans in code blocks
+  var placeholders = document.querySelectorAll('.adb-host-placeholder');
+  for (var i = 0; i < placeholders.length; i++) {
+    placeholders[i].textContent = host;
+  }
+
+  // Copy ADB address button
+  var copyBtn = document.getElementById('copy-adb-addr');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(adbAddr).then(function() {
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>已复制</span>';
+        setTimeout(function() {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> <span>复制</span>';
+        }, 1800);
+      }).catch(function() {
+        // Fallback
+        var ta = document.createElement('textarea');
+        ta.value = adbAddr;
+        ta.style.cssText = 'position:fixed;opacity:0;';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>已复制</span>';
+        setTimeout(function() {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> <span>复制</span>';
+        }, 1800);
+      });
+    });
+  }
+})();
+
+// ── Code block copy buttons ────────────────────
+document.querySelectorAll('.code-wrapper .copy-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var code = btn.closest('.code-wrapper').querySelector('code');
+    navigator.clipboard.writeText(code.textContent).then(function() {
       btn.classList.add('copied');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-      setTimeout(() => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已复制';
+      setTimeout(function() {
         btn.classList.remove('copied');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制';
       }, 1800);
-    }).catch(() => {
-      const ta = document.createElement('textarea');
+    }).catch(function() {
+      var ta = document.createElement('textarea');
       ta.value = code.textContent;
       ta.style.cssText = 'position:fixed;opacity:0;';
       document.body.appendChild(ta);
@@ -775,10 +899,10 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
       document.execCommand('copy');
       document.body.removeChild(ta);
       btn.classList.add('copied');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-      setTimeout(() => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已复制';
+      setTimeout(function() {
         btn.classList.remove('copied');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制';
       }, 1800);
     });
   });
