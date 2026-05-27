@@ -13,7 +13,7 @@ application:
 
 services:
   redroid:
-    image: {{ if .U.android_image }}{{ .U.android_image }}{{ else }}registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21 {{ end }}
+    image: registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21
     healthcheck:
       disable: true
     binds:
