@@ -13,7 +13,7 @@ application:
 
 services:
   redroid:
-    image: registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21
+    image: { { .U.android_image } }
     binds:
       - /lzcapp/var/data:/data
 
