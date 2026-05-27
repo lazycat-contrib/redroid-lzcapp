@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReDroid &mdash; GPU Accelerated Android In Cloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #020617;
+    --bg-base: #0F172A;
+    --bg-elevated: #1E293B;
+    --bg-card: #16213E;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(255,255,255,0.06);
+    --foreground: #F1F5F9;
+    --foreground-muted: #94A3B8;
+    --foreground-dim: #64748B;
+    --accent: #22C55E;
+    --accent-glow: rgba(34,197,94,0.15);
+    --accent-secondary: #4FC3F7;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --danger: #EF4444;
+    --danger-bg: rgba(239,68,68,0.08);
+    --warn: #F59E0B;
+    --warn-bg: rgba(245,158,11,0.08);
+    --info: #3B82F6;
+    --info-bg: rgba(59,130,246,0.08);
+    --code-bg: #0D1117;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --easing: cubic-bezier(0.16,1,0.3,1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; color-scheme: dark; }
+  body {
+    font-family: var(--font);
+    background: var(--bg-deep);
+    color: var(--foreground);
+    line-height: 1.7;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Ambient background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(ellipse at 70% 0%, rgba(34,197,94,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 30% 100%, rgba(79,195,247,0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; position: relative; z-index: 1; }
+
+  /* ── Header ─────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid rgba(34,197,94,0.2);
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #F1F5F9 0%, #94A3B8 50%, #4FC3F7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.75rem;
+  }
+  .hero .subtitle {
+    font-size: 1.1rem;
+    color: var(--foreground-muted);
+    font-weight: 400;
+    max-width: 560px;
+    margin: 0 auto 1.25rem;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .tag {
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--foreground-muted);
+  }
+  .tag.accent {
+    border-color: rgba(34,197,94,0.25);
+    color: var(--accent);
+  }
+  .tag.warn {
+    border-color: rgba(239,68,68,0.25);
+    color: var(--danger);
+  }
+
+  /* ── Alert ──────────────────────── */
+  .alert {
+    display: flex;
+    gap: 0.85rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin: 1.5rem 0;
+    border: 1px solid;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    align-items: flex-start;
+  }
+  .alert-danger {
+    background: var(--danger-bg);
+    border-color: rgba(239,68,68,0.2);
+  }
+  .alert-icon {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    margin-top: 1px;
+  }
+  .alert strong { display: block; margin-bottom: 0.15rem; }
+
+  /* ── Section ────────────────────── */
+  section { margin: 3rem 0; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-header svg { flex-shrink: 0; width: 24px; height: 24px; color: var(--accent); }
+  .section-header h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .section-header h2 .hl { color: var(--accent); }
+
+  /* ── Bento Grid ─────────────────── */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .bento-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.35rem;
+    transition: border-color 0.2s var(--easing), background 0.2s var(--easing);
+    position: relative;
+    overflow: hidden;
+  }
+  .bento-card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-hover);
+  }
+  .bento-card .icon-box {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+  .bento-card .icon-box svg { width: 20px; height: 20px; }
+  .bento-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+  .bento-card p {
+    font-size: 0.84rem;
+    color: var(--foreground-muted);
+    line-height: 1.55;
+  }
+
+  /* ── Use Cases ──────────────────── */
+  .use-cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .use-case {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: border-color 0.2s var(--easing);
+  }
+  .use-case:hover { border-color: var(--border-strong); }
+  .use-case .uc-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface);
+    color: var(--accent-secondary);
+    flex-shrink: 0;
+  }
+  .use-case .uc-icon svg { width: 18px; height: 18px; }
+  .use-case .uc-text { font-size: 0.88rem; font-weight: 500; }
+
+  /* ── Steps ──────────────────────── */
+  .steps { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 1rem; }
+  .step {
+    counter-increment: step;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem 1.25rem 4rem;
+    position: relative;
+    transition: border-color 0.2s var(--easing);
+  }
+  .step:hover { border-color: var(--border-strong); }
+  .step::before {
+    content: counter(step);
+    position: absolute;
+    left: 1.25rem;
+    top: 1.25rem;
+    width: 30px;
+    height: 30px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .step p { font-size: 0.88rem; color: var(--foreground-muted); }
+
+  /* ── Code Block ─────────────────── */
+  .code-wrapper {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 0.65rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .code-wrapper .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--foreground-dim);
+  }
+  .code-wrapper .code-header .lang { font-weight: 500; }
+  .code-wrapper pre {
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    tab-size: 2;
+  }
+  .code-wrapper pre code { color: #C9D1D9; }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-family: var(--font);
+    font-weight: 500;
+    color: var(--foreground-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s var(--easing);
+  }
+  .copy-btn:hover { background: var(--surface-hover); color: var(--foreground); border-color: var(--border-strong); }
+  .copy-btn.copied { color: var(--accent); border-color: rgba(34,197,94,0.3); }
+  .copy-btn svg { width: 14px; height: 14px; }
+
+  /* ── Info Box ───────────────────── */
+  .info-box {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    margin: 1rem 0;
+    border: 1px solid;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .info-box.tip { background: var(--accent-glow); border-color: rgba(34,197,94,0.2); }
+  .info-box.info { background: var(--info-bg); border-color: rgba(59,130,246,0.2); }
+  .info-box.warn { background: var(--warn-bg); border-color: rgba(245,158,11,0.2); }
+  .info-box svg { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; }
+  .info-box.tip svg { color: var(--accent); }
+  .info-box.info svg { color: var(--info); }
+  .info-box.warn svg { color: var(--warn); }
+
+  /* ── Table ──────────────────────── */
+  .table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead { background: rgba(255,255,255,0.02); }
+  th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--foreground-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+  td code {
+    background: var(--code-bg);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    color: #F0C060;
+    white-space: nowrap;
+  }
+
+  /* ── Troubleshooting cards ──────── */
+  .trouble-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .trouble-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.15rem 1.35rem;
+    transition: border-color 0.2s var(--easing);
+  }
+  .trouble-card:hover { border-color: var(--border-strong); }
+  .trouble-card h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .trouble-card ul { padding-left: 1.2rem; font-size: 0.85rem; color: var(--foreground-muted); }
+  .trouble-card li { margin: 0.25rem 0; }
+
+  /* ── Divider ────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 3rem 0;
+  }
+
+  /* ── Footer ─────────────────────── */
+  footer {
+    text-align: center;
+    padding: 3rem 0 1.5rem;
+    color: var(--foreground-dim);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  footer a { color: var(--foreground-muted); text-decoration: none; transition: color 0.15s; }
+  footer a:hover { color: var(--foreground); }
+
+  /* ── Focus / Accessibility ──────── */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 1rem; }
+    .hero { padding: 2rem 0 1.5rem; }
+    .bento { grid-template-columns: 1fr; }
+    .use-cases { grid-template-columns: 1fr; }
+    .code-wrapper pre { font-size: 0.78rem; padding: 0.75rem 1rem; }
+    .step { padding: 1rem 1rem 1rem 3.5rem; }
+    .step::before { left: 0.85rem; top: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══════════════ Hero ═══════════════ -->
+  <header class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span> GPU Accelerated AIC
+    </div>
+    <h1>ReDroid</h1>
+    <p class="subtitle">
+      Remote anDroid &mdash; boot Android instances in containers with full GPU acceleration.
+      Cloud gaming, virtual phones, and automation testing on arm64 &amp; amd64.
+    </p>
+    <div class="hero-tags">
+      <span class="tag accent">ADB :5555</span>
+      <span class="tag">Android 8.1 &ndash; 16</span>
+      <span class="tag">arm64 &amp; amd64</span>
+      <span class="tag warn">Internal Network Only</span>
+    </div>
+  </header>
+
+  <!-- ═══════════════ Security Alert ═══════════════ -->
+  <div class="alert alert-danger" role="alert">
+    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <div>
+      <strong>Security Warning</strong>
+      Never expose the ADB port on a public network. Anyone with ADB access can fully control the Android instance and may compromise the host. Connect only from trusted local networks or via VPN.
+    </div>
+  </div>
+
+  <!-- ═══════════════ Key Features ═══════════════ -->
+  <section aria-labelledby="features-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+      <h2 id="features-heading">Key <span class="hl">Features</span></h2>
+    </div>
+    <div class="bento">
+      <div class="bento-card">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h4>GPU Acceleration</h4>
+        <p>Hardware-accelerated rendering via host GPU for smooth graphics and gaming performance.</p>
+      </div>
+      <div class="bento-card">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+        <h4>Multi-Instance</h4>
+        <p>Boot many isolated Android instances simultaneously on a single Linux host.</p>
+      </div>
+      <div class="bento-card">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <h4>arm64 &amp; amd64</h4>
+        <p>Native support for both CPU architectures. Works on Docker, Podman, and Kubernetes.</p>
+      </div>
+      <div class="bento-card">
+        <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+        <h4>Android 8.1 &ndash; 16</h4>
+        <p>Wide version coverage from legacy to the latest Android release.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Use Cases ═══════════════ -->
+  <section aria-labelledby="usecases-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 10-4 4-2-2"/></svg>
+      <h2 id="usecases-heading">Use <span class="hl">Cases</span></h2>
+    </div>
+    <div class="use-cases">
+      <div class="use-case">
+        <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21"/></svg></div>
+        <span class="uc-text">Cloud Gaming</span>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+        <span class="uc-text">Virtual Phones</span>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></div>
+        <span class="uc-text">Automation Testing</span>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <span class="uc-text">App Development</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════ Connect via ADB ═══════════════ -->
+  <section aria-labelledby="adb-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <h2 id="adb-heading">Connect via <span class="hl">ADB</span></h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <h4>Install ADB on your machine</h4>
+        <p>Download from <a href="https://developer.android.com/studio#downloads" target="_blank" rel="noopener">Android Developer Studio</a> or use your package manager.</p>
+        <div class="code-wrapper">
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <pre><code># Debian / Ubuntu
+sudo apt install adb
+
+# macOS
+brew install android-platform-tools
+
+# Windows &mdash; download SDK Platform Tools from:
+# https://developer.android.com/studio#downloads</code></pre>
+        </div>
+      </li>
+      <li class="step">
+        <h4>Find the connection address</h4>
+        <p>In the LazyCat app detail page, locate the <strong>TCP ingress</strong> host and port for port 5555.</p>
+      </li>
+      <li class="step">
+        <h4>Connect</h4>
+        <div class="code-wrapper">
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <pre><code>adb connect &lt;host&gt;:&lt;port&gt;
+
+# Verify connection
+adb devices
+# Expected output:
+# &lt;host&gt;:&lt;port&gt;    device</code></pre>
+        </div>
+      </li>
+    </ol>
+
+    <div class="info-box tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>If the connection fails, verify the ADB port is reachable from your network. Check firewall rules and ensure you are on the same local network or VPN.</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ scrcpy ═══════════════ -->
+  <section aria-labelledby="scrcpy-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <h2 id="scrcpy-heading">Screen Mirroring with <span class="hl">scrcpy</span></h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <h4>Install scrcpy</h4>
+        <div class="code-wrapper">
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <pre><code># Debian / Ubuntu
+sudo apt install scrcpy
+
+# macOS
+brew install scrcpy
+
+# Windows
+# Download from https://github.com/Genymobile/scrcpy/releases</code></pre>
+        </div>
+      </li>
+      <li class="step">
+        <h4>Launch scrcpy</h4>
+        <div class="code-wrapper">
+          <div class="code-header"><span class="lang">Shell</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <pre><code>scrcpy -s &lt;host&gt;:&lt;port&gt;
+
+# Useful options:
+scrcpy -s &lt;host&gt;:&lt;port&gt; --max-size 1024     # Limit resolution
+scrcpy -s &lt;host&gt;:&lt;port&gt; --bit-rate 2M        # Limit bitrate
+scrcpy -s &lt;host&gt;:&lt;port&gt; --no-audio            # Disable audio forwarding
+scrcpy -s &lt;host&gt;:&lt;port&gt; --stay-awake          # Keep screen on
+scrcpy -s &lt;host&gt;:&lt;port&gt; --video-codec h265    # H.265 hardware encoding</code></pre>
+        </div>
+      </li>
+    </ol>
+
+    <div class="info-box info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>For smoother performance on slower networks, use <code>--max-size 1024 --bit-rate 2M</code> to reduce bandwidth. scrcpy defaults to H.264; use <code>--video-codec h265</code> for better quality at lower bitrates.</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════ ADB Quick Reference ═══════════════ -->
+  <section aria-labelledby="ref-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h2 id="ref-heading">ADB <span class="hl">Quick Reference</span></h2>
+    </div>
+
+    <div class="table-wrap">
+      <table aria-label="ADB commands reference">
+        <thead>
+          <tr><th>Command</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>adb devices</code></td><td>List connected devices</td></tr>
+          <tr><td><code>adb shell</code></td><td>Open an interactive shell on the device</td></tr>
+          <tr><td><code>adb install app.apk</code></td><td>Install an APK</td></tr>
+          <tr><td><code>adb uninstall &lt;pkg&gt;</code></td><td>Uninstall an app by package name</td></tr>
+          <tr><td><code>adb push local /sdcard/</code></td><td>Copy a file to the device</td></tr>
+          <tr><td><code>adb pull /sdcard/f local</code></td><td>Copy a file from the device</td></tr>
+          <tr><td><code>adb reboot</code></td><td>Reboot the Android instance</td></tr>
+          <tr><td><code>adb logcat</code></td><td>View real-time system logs</td></tr>
+          <tr><td><code>adb shell wm size</code></td><td>Get screen resolution</td></tr>
+          <tr><td><code>adb shell wm density</code></td><td>Get screen DPI</td></tr>
+          <tr><td><code>adb disconnect &lt;addr&gt;</code></td><td>Disconnect from a device</td></tr>
+          <tr><td><code>adb kill-server</code></td><td>Restart the ADB server</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Android Versions ═══════════════ -->
+  <section aria-labelledby="versions-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <h2 id="versions-heading">Available <span class="hl">Versions</span></h2>
+    </div>
+
+    <div class="table-wrap">
+      <table aria-label="Available Android versions">
+        <thead>
+          <tr><th>Image Tag</th><th>Android</th><th>Arch</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>redroid/redroid:16.0.0-latest</code></td><td>16</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:16.0.0_64only-latest</code></td><td>16</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:15.0.0-latest</code></td><td>15</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:15.0.0_64only-latest</code></td><td>15</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:14.0.0-latest</code></td><td>14</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:14.0.0_64only-latest</code></td><td>14</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:13.0.0-latest</code></td><td>13</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:13.0.0_64only-latest</code></td><td>13</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:12.0.0-latest</code></td><td>12</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:12.0.0_64only-latest</code></td><td>12</td><td>64 only</td></tr>
+          <tr><td><code>redroid/redroid:11.0.0-latest</code></td><td>11</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:10.0.0-latest</code></td><td>10</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:9.0.0-latest</code></td><td>9</td><td>32+64</td></tr>
+          <tr><td><code>redroid/redroid:8.1.0-latest</code></td><td>8.1</td><td>32+64</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="color:var(--foreground-dim);font-size:0.84rem;margin-top:0.75rem;">To switch versions, update the <strong>Android Image</strong> parameter in app settings and redeploy.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════ Troubleshooting ═══════════════ -->
+  <section aria-labelledby="trouble-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h2 id="trouble-heading">Troubleshooting</h2>
+    </div>
+
+    <div class="trouble-list">
+      <div class="trouble-card">
+        <h4>ADB connection refused</h4>
+        <ul>
+          <li>Verify the redroid container is running</li>
+          <li>Confirm the host address and port are correct</li>
+          <li>Check that no firewall is blocking the TCP ingress port</li>
+          <li>Try <code>adb kill-server</code> then reconnect</li>
+        </ul>
+      </div>
+      <div class="trouble-card">
+        <h4>scrcpy shows a black screen</h4>
+        <ul>
+          <li>Wait 1&ndash;2 minutes for the Android system to fully boot</li>
+          <li>Try <code>adb reconnect</code> to refresh the connection</li>
+          <li>Verify the container has sufficient memory allocated</li>
+        </ul>
+      </div>
+      <div class="trouble-card">
+        <h4>Container fails to start</h4>
+        <ul>
+          <li>Host must have <code>binder_linux</code> and <code>ashmem_linux</code> kernel modules loaded</li>
+          <li>Verify: <code>lsmod | grep -E "binder|ashmem"</code></li>
+          <li>Host must support privileged containers</li>
+          <li>Check container logs for detailed error messages</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Host Requirements ═══════════════ -->
+  <section aria-labelledby="host-heading">
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+      <h2 id="host-heading">Host <span class="hl">Requirements</span></h2>
+    </div>
+
+    <div class="info-box warn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Kernel Module Note</strong>
+        The LazyCat host must have the required kernel modules. If the container fails to start, the host administrator may need to run:
+        <div class="code-wrapper" style="margin-top:0.5rem;">
+          <div class="code-header"><span class="lang">Shell (host)</span><button class="copy-btn" aria-label="Copy to clipboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div>
+          <pre><code>apt install linux-modules-extra-$(uname -r)
+modprobe binder_linux devices="binder,hwbinder,vndbinder"
+modprobe ashmem_linux</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Footer ═══════════════ -->
+  <footer>
+    <p>
+      <a href="https://github.com/remote-android/redroid" target="_blank" rel="noopener">ReDroid on GitHub</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://developer.lazycat.cloud" target="_blank" rel="noopener">LazyCat Developer Docs</a>
+    </p>
+    <p style="margin-top:0.4rem;">Powered by LazyCat Cloud</p>
+  </footer>
+
+</div>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const wrapper = btn.closest('.code-wrapper');
+    const code = wrapper.querySelector('code');
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+      }, 1800);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = code.textContent;
+      ta.style.cssText = 'position:fixed;opacity:0;';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+      }, 1800);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

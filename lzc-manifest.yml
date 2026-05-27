@@ -1,0 +1,26 @@
+application:
+  subdomain: redroid
+  upstreams:
+    - location: /
+      backend: file:///lzcapp/pkg/content/web/index.html
+  ingress:
+    - protocol: tcp
+      port: 5555
+      service: redroid
+      description: "ADB debugging port"
+  public_path:
+    - /
+
+services:
+  redroid:
+    image: registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21
+    binds:
+      - /lzcapp/var/data:/data
+
+usage: |
+  ReDroid 使用说明：
+  1. 通过 ADB 连接到 TCP 端口 5555（可在应用详情页查看具体连接地址）
+  2. 使用 adb connect <host>:5555 连接
+  3. 使用 scrcpy -s <host>:5555 查看和控制 Android 屏幕
+
+  ⚠️ 安全警告：请勿将 ADB 端口暴露在公网，否则设备可能被入侵。

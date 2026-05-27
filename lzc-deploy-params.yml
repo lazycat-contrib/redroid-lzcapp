@@ -1,0 +1,45 @@
+params:
+  - id: android_image
+    type: string
+    name: "Android Image"
+    description: |
+      ReDroid Android image to use. Available options:
+      - redroid/redroid:16.0.0-latest (Android 16)
+      - redroid/redroid:16.0.0_64only-latest (Android 16, 64bit only)
+      - redroid/redroid:15.0.0-latest (Android 15)
+      - redroid/redroid:15.0.0_64only-latest (Android 15, 64bit only)
+      - redroid/redroid:14.0.0-latest (Android 14)
+      - redroid/redroid:14.0.0_64only-latest (Android 14, 64bit only)
+      - redroid/redroid:13.0.0-latest (Android 13)
+      - redroid/redroid:13.0.0_64only-latest (Android 13, 64bit only)
+      - redroid/redroid:12.0.0-latest (Android 12)
+      - redroid/redroid:12.0.0_64only-latest (Android 12, 64bit only)
+      - redroid/redroid:11.0.0-latest (Android 11)
+      - redroid/redroid:10.0.0-latest (Android 10)
+      - redroid/redroid:9.0.0-latest (Android 9)
+      - redroid/redroid:8.1.0-latest (Android 8.1)
+      Or enter any custom redroid image tag.default redroid/redroid:16.0.0-latest with lazycat registry
+    default_value: "registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21"
+    optional: false
+
+locales:
+  zh:
+    android_image:
+      name: "Android 镜像"
+      description: |
+        ReDroid Android 镜像选择。可选版本：
+        - redroid/redroid:16.0.0-latest (Android 16)
+        - redroid/redroid:16.0.0_64only-latest (Android 16, 仅64位)
+        - redroid/redroid:15.0.0-latest (Android 15)
+        - redroid/redroid:15.0.0_64only-latest (Android 15, 仅64位)
+        - redroid/redroid:14.0.0-latest (Android 14)
+        - redroid/redroid:14.0.0_64only-latest (Android 14, 仅64位)
+        - redroid/redroid:13.0.0-latest (Android 13)
+        - redroid/redroid:13.0.0_64only-latest (Android 13, 仅64位)
+        - redroid/redroid:12.0.0-latest (Android 12)
+        - redroid/redroid:12.0.0_64only-latest (Android 12, 仅64位)
+        - redroid/redroid:11.0.0-latest (Android 11)
+        - redroid/redroid:10.0.0-latest (Android 10)
+        - redroid/redroid:9.0.0-latest (Android 9)
+        - redroid/redroid:8.1.0-latest (Android 8.1)
+        也可输入任意自定义 redroid 镜像标签。默认为使用懒猫registry的redroid/redroid:16.0.0-latest

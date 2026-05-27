@@ -1,0 +1,20 @@
+package: community.lazycat.app.redroid
+version: 1.0.0
+name: ReDroid
+description: "GPU accelerated Android In Cloud (AIC) solution for cloud gaming, virtual phones, and automation testing"
+min_os_version: 1.5.0
+homepage: https://github.com/remote-android/redroid-doc
+author: remote-android Team
+license: GPL v2
+
+permissions:
+  required:
+    - net.internet
+
+locales:
+  zh:
+    name: "ReDroid"
+    description: "GPU 加速的 Android 云方案 (AIC)，支持云游戏、虚拟手机、自动化测试等场景"
+  en:
+    name: "ReDroid"
+    description: "GPU accelerated Android In Cloud (AIC) solution for cloud gaming, virtual phones, and automation testing"

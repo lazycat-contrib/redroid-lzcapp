@@ -1,0 +1,9 @@
+manifest: ./lzc-manifest.yml
+pkgout: ./
+icon: ./icon.png
+contentdir: ./content
+
+compose_override:
+  services:
+    redroid:
+      privileged: true
