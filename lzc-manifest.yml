@@ -13,7 +13,8 @@ application:
 
 services:
   redroid:
-    image: registry.lazycat.cloud/czyt/redroid/redroid:265df1b0e0154a21
+    # upstream: redroid/redroid:16.0.0-250627
+    image: docker.1ms.run/redroid/redroid:16.0.0-250627
     healthcheck:
       disable: true
     binds:
