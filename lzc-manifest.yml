@@ -14,7 +14,7 @@ application:
 services:
   redroid:
     # upstream: redroid/redroid:16.0.0-250627
-    image: docker.1ms.run/redroid/redroid:16.0.0-250627
+    image: docker.1ms.run/redroid/redroid:16.0.0-250627@sha256:bb97565901da3ed8c10beb949c1b49b2ecae4f2f0e7df203adcb42f4d0926d08
     healthcheck:
       disable: true
     binds:

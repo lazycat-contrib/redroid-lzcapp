@@ -23,10 +23,11 @@ images:
     service: redroid
     source: redroid/redroid
     channel: custom
-    sort: semver
+    sort: created
     tag_regex: '^16\.0\.0-\d{6}$'
     delivery:
       mode: mirror
+      require_digest_match: true
 
 stores:
   official:
